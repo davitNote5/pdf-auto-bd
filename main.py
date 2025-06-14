@@ -29,7 +29,7 @@ submission_data = {
     "extraction_results": None,
 }
 
-app = FastAPI()
+app = FastAPI(debug=True)
 handler = Mangum(app)
 
 # Allow frontend requests (from React app)
@@ -58,6 +58,8 @@ def read_root():
 # Login request
 @app.post("/login")
 def login(request: LoginRequest):
+
+    # initialize all variables on sigin page
     global mainContResponse, extracted_data_storage, medicationList, diseaseNum, lastDiseaseNum, diseaseList, totalDiseasePresent
     mainContResponse = None
     extracted_data_storage = None
@@ -562,4 +564,3 @@ async def get_zip_filename():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching filename: {str(e)}")
     
-
