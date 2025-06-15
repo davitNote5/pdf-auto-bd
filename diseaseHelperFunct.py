@@ -23,7 +23,7 @@ def find_closest_medication(med_name, med_list, threshold=75):
     return best_match if score >= threshold else None  # Only return if similarity is high
 
 # Function that sends the request and waits for completion
-def wait_for_run_completion(client, assistant_id, disease_name, provided_medications, sleep_interval=5, max_wait=4):
+def wait_for_run_completion(client, assistant_id, disease_name, provided_medications, sleep_interval=5, max_wait=70):
     try:
         # print(f"disease_name : {disease_name}")
         # print(f"provided_medications : {provided_medications}")
