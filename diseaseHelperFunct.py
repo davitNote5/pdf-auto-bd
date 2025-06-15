@@ -23,7 +23,7 @@ def find_closest_medication(med_name, med_list, threshold=75):
     return best_match if score >= threshold else None  # Only return if similarity is high
 
 # Function that sends the request and waits for completion
-def wait_for_run_completion(client, assistant_id, disease_name, provided_medications, sleep_interval=5):
+def wait_for_run_completion(client, assistant_id, disease_name, provided_medications, sleep_interval=5, max_wait=4):
     try:
         # print(f"disease_name : {disease_name}")
         # print(f"provided_medications : {provided_medications}")
@@ -48,9 +48,10 @@ def wait_for_run_completion(client, assistant_id, disease_name, provided_medicat
             thread_id=thread_id,
             assistant_id=assistant_id,
         )
-        message_with_flags
+
+        total_wait = 0
+        while total_wait < max_wait:
         # print(f"run : {run}")
-        while True:
             run = client.beta.threads.runs.retrieve(thread_id=thread_id, run_id=run.id)
             if run.completed_at:
                 messages = client.beta.threads.messages.list(thread_id=thread_id)
@@ -61,8 +62,18 @@ def wait_for_run_completion(client, assistant_id, disease_name, provided_medicat
                 client.beta.threads.delete(thread_id)
                 return response
 
-            logging.info("Waiting for run to complete...")
             time.sleep(sleep_interval)
+            total_wait += sleep_interval
+
+            # ⏱ Timeout fallback
+        client.beta.threads.delete(thread_id)
+        print("⛔ GPT processing timed out after 60 seconds.")
+        return json.dumps({
+            "text1": "no disease found in database",
+            "text2": "no disease found in database",
+            "med": "no disease found in database"
+        })
+        
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")
