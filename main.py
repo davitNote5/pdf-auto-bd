@@ -183,8 +183,8 @@ async def run_disease_processing_endpoint(data: dict):
         session["totalDiseasePresent"] = len(session["diseaseList"]) - 1
 
         # totalDiseasePresent = len(diseaseList)
-        print(f"disease list: {session["diseaseList"]}")
-        print(f"disease list: {session["totalDiseasePresent"]}")        
+        print(f"disease list: {session['diseaseList']}")
+        print(f"disease list: {session['totalDiseasePresent']}")        
         # mainContResponse = response_gpt['mainContResponse']
 
         return session.get("mainContResponse")
