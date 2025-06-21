@@ -14,7 +14,6 @@ from mangum import Mangum
 import uuid
 
 # for testing only
-from dummy_data import get_extracted_data_storage, get_mainContResponse, get_diseaseList
 
 session_store = {} 
 # extracted_data_storage = None
