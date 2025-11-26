@@ -16,6 +16,7 @@ load_dotenv()
 
 def clean_medications(medications_str, pain_medications_str):
     # Split into lists
+    print("clean med start")
     meds_list = [m.strip() for m in medications_str.split('--') if m.strip()]
     pain_list = [p.strip() for p in pain_medications_str.split('--') if p.strip()]
 
@@ -56,13 +57,16 @@ def clean_medications(medications_str, pain_medications_str):
     # Convert lists back to strings
     updated_medications = ' -- '.join(meds_list)
     updated_pain_medications = ' -- '.join(pain_list)
+    print("clean med start end")
 
     return updated_medications, updated_pain_medications
 
 
 def count_occurrences_of_flags(words_to_count,text):
+    print("occurances flag start")
     text_lower = text.lower()  # Convert text to lowercase for case-insensitive matching
     total_count = sum(text_lower.count(word) for word in words_to_count)
+    print("occurances flag end")
     return total_count
 
 def getFlags(ex_txt, check_words, wordCount = 0):
@@ -183,8 +187,10 @@ def extract_text_from_pdf(file_path, pages_list=None):
 
 def process_485_pdf(file_path, pages_list=None):
     # global extractionResults  # Declare that we're modifying the global variable
+    print("process pdf start")
     extracted_text = extract_text_from_pdf(file_path, pages_list)
     # print(extracted_text)
+    print("process pdf process 1")
     response = process_485_information(extracted_text)
 
     # If final_result is already a dict, you can use it directly.
@@ -196,6 +202,7 @@ def process_485_pdf(file_path, pages_list=None):
         if isinstance(response, dict):
             final_result = response
         else:
+            print("process pdf process 2")
             json_string = response  # ✅ FIXED
             if json_string.startswith("```json"):
                 json_string = json_string.replace("```json", "").replace("```", "").strip()
@@ -206,6 +213,7 @@ def process_485_pdf(file_path, pages_list=None):
                 print(json_string)
                 error_exit(f"Error decoding JSON: {e}")
 
+    print("process pdf process 3")
     final_result['diagnosis']['depression'] = getFlags(extracted_text, ["depressed", "depression"],1)
     final_result['extraDetails']['vertigo'] = getFlags(extracted_text, ["Vertigo", "vertigo"], 0)
     final_result['extraDetails']['palpitation'] = getFlags(extracted_text, ["palpitation", "Palpitation", "palpitations,","Palpitations"], 1)
@@ -218,7 +226,7 @@ def process_485_pdf(file_path, pages_list=None):
 
     final_result["medications"]["medications"], final_result["medications"]["painMedications"] = clean_medications(final_result["medications"]["medications"], final_result["medications"]["painMedications"])
 
-
+    print("process pdf process end")
 
     print(f"Response from LLM:\n{final_result}")
     # print(final_result)
