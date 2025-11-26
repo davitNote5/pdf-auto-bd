@@ -135,8 +135,10 @@ class Form485(BaseModel):
     extraDetails: ExtraDetails = Field(description="Extra Details of the patient")
 
 def error_exit(error_message):
-    print(error_message)
-    sys.exit(1)
+    # print(error_message)
+    # sys.exit(1)
+    raise RuntimeError(str(error_message))
+
 
 
 
