@@ -202,6 +202,8 @@ def process_485_pdf(file_path, pages_list=None):
             try:
                 final_result = json.loads(json_string)
             except json.JSONDecodeError as e:
+                print("⚠️ RAW LLM RESPONSE THAT FAILED JSON PARSING:")
+                print(json_string)
                 error_exit(f"Error decoding JSON: {e}")
 
     final_result['diagnosis']['depression'] = getFlags(extracted_text, ["depressed", "depression"],1)
