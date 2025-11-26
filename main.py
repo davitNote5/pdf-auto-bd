@@ -137,8 +137,13 @@ async def upload_pdf(file: UploadFile = File(...), action: str = Form(...), sn_n
         # return extracted_data  # ✅ Send full cleaned result
         return session["extracted_data_storage"]
 
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
     
 
 @app.post("/save-extracted-data")
